@@ -1,12 +1,11 @@
 from flask import Flask
 from flask_restful import Api
-from resources.temperature import Temperature
-from resources.stats import Stats
+
+from resources.temperature import TemperatureReading
 
 app = Flask(__name__)
 api = Api(app)
 
-api.add_resource(Temperature, '/api/temperature')
-api.add_resource(Stats, '/api/stats')
+api.add_resource(TemperatureReading, '/api/temperature')
 
 app.run(port=5000, debug=True)

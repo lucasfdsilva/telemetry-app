@@ -6,17 +6,15 @@ import botocore
 import boto3
 import logging
 
+from resources.stats import Stats
+from common.get_stats import get_stats
+from common.non_empty_string import non_empty_string
+
 
 client = boto3.client('dynamodb')
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
-
-
-def non_empty_string(string):
-    if not string:
-        raise ValueError("String must not be empty.")
-    return string
 
 
 class TemperatureReading(Resource):
@@ -46,7 +44,7 @@ class TemperatureReading(Resource):
         data = TemperatureReading.parser.parse_args()
 
         try:
-            save_temperature_reading_response = client.put_item(
+            save_temperature_reading = client.put_item(
                 TableName='temperature_readings',
                 Item={
                     'sensor_id': {
@@ -67,62 +65,14 @@ class TemperatureReading(Resource):
             else:
                 raise error
 
-        current_stats_response = client.get_item(
-            TableName='temperature_readings_aggregation',
-            Key={
-                'aggregation_period': {
-                    'S': 'total'
-                },
-            },
-            AttributesToGet=[
-                'maximum',
-                'minimum',
-            ]
-        )
-
-        print(current_stats_response)
+        current_stats = get_stats()
 
         maximum_temperature = max(
-            data['temperature'], int(current_stats_response['Item']['maximum']['N']))
+            data['temperature'], current_stats['Maximum'])
         minimum_temperature = min(
-            data['temperature'], int(current_stats_response['Item']['minimum']['N']))
+            data['temperature'], current_stats['Minimum'])
 
-        print(minimum_temperature)
+        update_stats_response = Stats.update_stats(
+            data['temperature'], maximum_temperature, minimum_temperature)
 
-        update_stats_response = client.update_item(
-            TableName='temperature_readings_aggregation',
-            Key={
-                'aggregation_period': {
-                    'S': 'total'
-                }
-            },
-            UpdateExpression="""ADD total_readings_count :count_increment_value,
-                                total_temperature_sum :temperature_value
-                                SET maximum= :highest_temperature,
-                                minimum= :lowest_temperature""",
-            ExpressionAttributeValues={
-                ':count_increment_value': {
-                    "N": "1"
-                },
-                ':temperature_value': {
-                    "N": str(data['temperature'])
-                },
-                ':highest_temperature': {
-                    "N": str(maximum_temperature)
-                },
-                ':lowest_temperature': {
-                    "N": str(minimum_temperature)
-                },
-            },
-            ReturnValues="UPDATED_NEW"
-        )
-
-        return {
-            "message": "Temperature reading recorded successfully",
-            "currentStats": {
-                "maximum": update_stats_response['Attributes']['maximum']['N'],
-                "minimum": update_stats_response['Attributes']['minimum']['N'],
-                "total_temperature_sum": update_stats_response['Attributes']['total_temperature_sum']['N'],
-                "total_readings_count": update_stats_response['Attributes']['total_readings_count']['N']
-            }
-        }
+        return {"message": "Temperature reading recorded successfully"}

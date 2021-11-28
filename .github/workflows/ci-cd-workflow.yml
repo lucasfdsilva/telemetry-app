@@ -77,6 +77,9 @@ jobs:
         
   staging_plan:
     needs: build_and_push
+    defaults:
+        run:
+          working-directory: ./deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -101,6 +104,9 @@ jobs:
         
   staging_apply:
     needs: staging_plan
+    defaults:
+        run:
+          working-directory: ./deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -125,6 +131,9 @@ jobs:
         
   prod_plan:
     needs: staging_apply
+    defaults:
+        run:
+          working-directory: ./deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -149,6 +158,9 @@ jobs:
         
   prod_apply:
     needs: prod_plan
+    defaults:
+        run:
+          working-directory: ./deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

@@ -44,7 +44,7 @@ data "template_file" "telemetry_app_container_definitions" {
     prefix              = "${var.prefix}-${terraform.workspace}"
     log_group_name      = aws_cloudwatch_log_group.ecs_task_logs.name
     log_group_region    = data.aws_region.current.name
-    allowed_hosts       = "*"
+    allowed_hosts       = aws_lb.telemetry_app.dns_name
   }
 }
 
@@ -66,39 +66,59 @@ resource "aws_security_group" "ecs_service" {
   name        = "${local.prefix}-ecs-service"
   vpc_id      = aws_vpc.main.id
 
-  egress = {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  egress = [
+    {
+      description      = ""
+      from_port        = 443
+      to_port          = 443
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      security_groups  = []
+      self             = false
+    }
+  ]
 
-  ingress = {
-    from_port   = 9000
-    to_port     = 9000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  ingress = [
+    {
+      description      = "HTTP"
+      from_port        = 9000
+      to_port          = 9000
+      protocol         = "tcp"
+      cidr_blocks      = []
+      ipv6_cidr_blocks = []
+      prefix_list_ids  = []
+      security_groups  = [aws_security_group.lb.id]
+      self             = false
+    }
+  ]
 
   tags = local.common_tags
 }
 
 resource "aws_ecs_service" "telemetry_app" {
-  name            = "${local.prefix}-telemetry-app"
-  cluster         = aws_ecs_cluster.main.name
-  task_definition = aws_ecs_task_definition.telemetry_app.family
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  name             = "${local.prefix}-telemetry-app"
+  cluster          = aws_ecs_cluster.main.name
+  task_definition  = aws_ecs_task_definition.telemetry_app.family
+  desired_count    = 1
+  launch_type      = "FARGATE"
   platform_version = "1.4.0"
 
   network_configuration {
     subnets = [
-      aws_subnet.public_a.id,
-      aws_subnet.public_b.id
+      aws_subnet.private_a.id,
+      aws_subnet.private_b.id
     ]
+
+    security_groups = [aws_security_group.ecs_service.id]
   }
 
-  security_groups  = [aws_security_group.ecs_service.id]
+  load_balancer {
+    target_group_arn = aws_lb_target_group.telemetry_app.id
+    container_name   = "telemetry-app"
+    container_port   = 9000
+  }
 }
 
 

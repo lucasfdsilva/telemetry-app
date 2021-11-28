@@ -36,6 +36,8 @@ jobs:
       run: cd deploy
     
     - uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
       
     - name: Terraform Init with no Backend
       run: terraform init -backend=false
@@ -83,6 +85,8 @@ jobs:
         run: cd deploy
     
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -107,6 +111,8 @@ jobs:
         run: cd deploy
 
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -131,6 +137,8 @@ jobs:
         run: cd deploy
 
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -155,6 +163,8 @@ jobs:
         run: cd deploy
 
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

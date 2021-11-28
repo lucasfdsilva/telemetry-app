@@ -34,10 +34,7 @@ jobs:
     - uses: hashicorp/setup-terraform@v1
     
     - name: Change directory to Deploy
-      run: |
-        cd deploy
-        pwd
-        ls
+      run: cd deploy
       
     - name: Terraform Init with no Backend
       run: terraform init -backend=false
@@ -79,8 +76,20 @@ jobs:
     needs: build_and_push
     runs-on: ubuntu-latest
     steps:
-      - name: Plan Terraform Build
-        run: echo "Running Terraform Plan for Stage Environment."
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Change directory to Deploy
+        run: cd deploy
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select or Create
+        run: terraform workspace select staging || terraform workspace new staging
+        
+      - name: Terraform Plan
+        run: terraform plan
         
         
   staging_apply:
@@ -95,8 +104,20 @@ jobs:
     needs: staging_apply
     runs-on: ubuntu-latest
     steps:
-      - name: Production Terraform Plan
-        run: echo "Running Terraform Plan for Prod Environment."
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Change directory to Deploy
+        run: cd deploy
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select or Create
+        run: terraform workspace select prod || terraform workspace new prod
+        
+      - name: Terraform Plan
+        run: terraform plan
         
         
   prod_apply:

@@ -21,9 +21,6 @@ jobs:
       
       - uses: hashicorp/setup-terraform@v1
 
-      - name: Change directory to Deploy
-        run: cd deploy
-
       - name: Terraform Init
         run: terraform init
         

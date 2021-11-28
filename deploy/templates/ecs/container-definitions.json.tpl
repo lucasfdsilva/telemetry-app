@@ -6,7 +6,7 @@
         "memoryReservation": 512,
         "environment": [
             {
-                "name": "prefix",
+                "name": "PREFIX",
                 "value": "${prefix}"
             }
         ],

@@ -1,3 +1,5 @@
+import os
+
 from flask_restful import Resource
 
 import botocore
@@ -19,7 +21,7 @@ class Stats(Resource):
 
         try:
             update_stats_response = client.update_item(
-                TableName='temperature_readings_aggregation',
+                TableName=f"{os.environ['PREFIX']}-temperature-readings-aggregation",
                 Key={
                     'aggregation_period': {
                           'S': 'total'

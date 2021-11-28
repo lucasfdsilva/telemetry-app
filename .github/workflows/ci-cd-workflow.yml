@@ -34,9 +34,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Change directory to Deploy
-      run: ls
-    
     - uses: hashicorp/setup-terraform@v1.2.1
       
     - name: Terraform Init with no Backend
@@ -84,9 +81,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
     
-      - name: Change directory to Deploy
-        run: cd deploy
-    
       - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
@@ -110,9 +104,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-    
-      - name: Change directory to Deploy
-        run: cd deploy
 
       - uses: hashicorp/setup-terraform@v1.2.1
         
@@ -137,9 +128,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-    
-      - name: Change directory to Deploy
-        run: cd deploy
 
       - uses: hashicorp/setup-terraform@v1.2.1
         
@@ -164,9 +152,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-    
-      - name: Change directory to Deploy
-        run: cd deploy
 
       - uses: hashicorp/setup-terraform@v1.2.1
         

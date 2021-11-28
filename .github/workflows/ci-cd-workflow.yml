@@ -1,5 +1,8 @@
 name: CI/CD Workflow
 
+env:
+  ECR_REPO: telemetry-app
+
 on:
   workflow_dispatch:
 
@@ -65,11 +68,13 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: telemetry-app
+        ECR_REPOSITORY: ${{ env.ECR_REPO }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REPOSITORY:$IMAGE_TAG
+        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
+        docker push $ECR_REPOSITORY:latest
         
         
   staging_plan:

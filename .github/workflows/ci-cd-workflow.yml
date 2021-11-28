@@ -31,10 +31,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: hashicorp/setup-terraform@v1
     
     - name: Change directory to Deploy
       run: cd deploy
+    
+    - uses: hashicorp/setup-terraform@v1
       
     - name: Terraform Init with no Backend
       run: terraform init -backend=false
@@ -77,10 +78,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
-
+    
       - name: Change directory to Deploy
         run: cd deploy
+    
+      - uses: hashicorp/setup-terraform@v1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -100,10 +102,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
-
+    
       - name: Change directory to Deploy
         run: cd deploy
+
+      - uses: hashicorp/setup-terraform@v1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -123,10 +126,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
-
+    
       - name: Change directory to Deploy
         run: cd deploy
+
+      - uses: hashicorp/setup-terraform@v1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -146,10 +150,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
-
+    
       - name: Change directory to Deploy
         run: cd deploy
+
+      - uses: hashicorp/setup-terraform@v1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

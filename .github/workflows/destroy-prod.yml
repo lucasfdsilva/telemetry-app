@@ -1,0 +1,23 @@
+name: Destroy prod environment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy_prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Change directory to Deploy
+        run: cd deploy
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select
+        run: terraform workspace select prod
+        
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve

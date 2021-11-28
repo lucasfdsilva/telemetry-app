@@ -40,7 +40,7 @@ jobs:
     - uses: hashicorp/setup-terraform@v1.2.1
       
     - name: Terraform Init with no Backend
-      run: terraform init
+      run: terraform init -backend=false
     
     - name: Terraform FMT
       run: terraform fmt -check

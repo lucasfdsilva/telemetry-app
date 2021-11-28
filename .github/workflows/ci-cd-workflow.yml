@@ -31,7 +31,10 @@ jobs:
     - uses: hashicorp/setup-terraform@v1
     
     - name: Change directory to Deploy
-      run: cd deploy
+      run: |
+        cd deploy
+        pwd
+        ls
       
     - name: Terraform Init with no Backend
       run: terraform init -backend=false

@@ -38,7 +38,7 @@ resource "aws_lb_listener" "telemetry_app" {
 resource "aws_security_group" "lb" {
   description = "Allow access to Application Load Balancer"
   name        = "${local.prefix}-lb"
-  vpc_id      = aws_vpc.main.arn
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     protocol    = "tcp"

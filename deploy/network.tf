@@ -29,7 +29,7 @@ resource "aws_internet_gateway" "main" {
 
 #Availability Zone "A" Resources
 resource "aws_subnet" "public_a" {
-  cidr_block              = "10.1.10.0/24"
+  cidr_block              = "10.1.1.0/24"
   map_public_ip_on_launch = true
   vpc_id                  = aws_vpc.main.id
   availability_zone       = "${data.aws_region.current.name}a"

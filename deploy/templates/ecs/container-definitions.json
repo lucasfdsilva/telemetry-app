@@ -1,0 +1,28 @@
+[
+    {
+        "name": "telemetry-app",
+        "image": "${app_image}",
+        "essential": true,
+        "memoryReservation": 512,
+        "environment": [
+            {
+                "name": "ENV",
+                "value": "${terraform.workspace}"
+            }
+        ],
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${log_group_name}",
+                "awslogs-region": "${log_group_region}",
+                "awslogs-stream-prefix": "telemetry-app"
+            }
+        },
+        "portMappings": [
+            {
+                "containerPort": 9000,
+                "hostPort": 9000
+            }
+        ]
+    }
+]

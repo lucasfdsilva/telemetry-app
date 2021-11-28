@@ -13,7 +13,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
 
       ################################
@@ -30,13 +29,13 @@ jobs:
   terraform_validation:
     defaults:
         run:
-          working-directory: /deploy
+          working-directory: ./deploy
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     
     - name: Change directory to Deploy
-      run: pwd
+      run: ls
     
     - uses: hashicorp/setup-terraform@v1.2.1
       

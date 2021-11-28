@@ -28,19 +28,20 @@ jobs:
           
           
   terraform_validation:
+    defaults:
+        run:
+          working-directory: /deploy
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     
     - name: Change directory to Deploy
-      run: cd deploy
+      run: pwd
     
-    - uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_wrapper: false
+    - uses: hashicorp/setup-terraform@v1.2.1
       
     - name: Terraform Init with no Backend
-      run: terraform init -backend=false
+      run: terraform init
     
     - name: Terraform FMT
       run: terraform fmt -check
@@ -84,9 +85,7 @@ jobs:
       - name: Change directory to Deploy
         run: cd deploy
     
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_wrapper: false
+      - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -110,9 +109,7 @@ jobs:
       - name: Change directory to Deploy
         run: cd deploy
 
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_wrapper: false
+      - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -136,9 +133,7 @@ jobs:
       - name: Change directory to Deploy
         run: cd deploy
 
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_wrapper: false
+      - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -162,9 +157,7 @@ jobs:
       - name: Change directory to Deploy
         run: cd deploy
 
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_wrapper: false
+      - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
         run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

@@ -17,13 +17,33 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: github/super-linter/slim@v4
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          
+  terraform_validation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: hashicorp/setup-terraform@v1
+    
+    - name: Change directory to Deploy
+      run: cd deploy
+      
+    - name: Terraform Init with no Backend
+      run: terraform init -backend=false
+    
+    - name: Terraform FMT
+      run: terraform fmt -check
+      
+    - name: Terraform Validate
+      run: terraform validate
+       
 
-  build:
+  build_and_push:
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +67,42 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        
+        
+  staging_plan:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Plan Terraform Build
+        run: echo "Running Terraform Plan for Stage Environment."
+        
+        
+  staging_apply:
+    needs: staging_plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Staging Terraform Apply
+        run: echo "Running Terraform Apply for Stage Environment."
+        
+        
+  prod_plan:
+    needs: staging_apply
+    runs-on: ubuntu-latest
+    steps:
+      - name: Production Terraform Plan
+        run: echo "Running Terraform Plan for Prod Environment."
+        
+        
+  prod_apply:
+    needs: prod_plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Production Terraform Apply
+        run: echo "Running Terraform Plan for Production Environment."
+        
+  
+        
+  
   
       
 

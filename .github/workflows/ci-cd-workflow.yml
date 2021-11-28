@@ -81,6 +81,9 @@ jobs:
 
       - name: Change directory to Deploy
         run: cd deploy
+        
+      - name: Export ECR Image Full API variable
+        run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Terraform Init
         run: terraform init
@@ -96,8 +99,23 @@ jobs:
     needs: staging_plan
     runs-on: ubuntu-latest
     steps:
-      - name: Staging Terraform Apply
-        run: echo "Running Terraform Apply for Stage Environment."
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Change directory to Deploy
+        run: cd deploy
+        
+      - name: Export ECR Image Full API variable
+        run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select
+        run: terraform workspace select staging
+        
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
         
         
   prod_plan:
@@ -109,6 +127,9 @@ jobs:
 
       - name: Change directory to Deploy
         run: cd deploy
+        
+      - name: Export ECR Image Full API variable
+        run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Terraform Init
         run: terraform init
@@ -124,8 +145,23 @@ jobs:
     needs: prod_plan
     runs-on: ubuntu-latest
     steps:
-      - name: Production Terraform Apply
-        run: echo "Running Terraform Plan for Production Environment."
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Change directory to Deploy
+        run: cd deploy
+        
+      - name: Export ECR Image Full API variable
+        run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select
+        run: terraform workspace select prod
+        
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
         
   
         

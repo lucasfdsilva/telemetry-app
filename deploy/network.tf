@@ -233,10 +233,6 @@ resource "aws_route" "private_b_internet_out" {
 
 resource "aws_vpc_endpoint" "dynamo_db" {
   vpc_id = aws_vpc.main.id
-  subnet_ids = [
-    aws_subnet.private_a.id,
-    aws_subnet.private_b.id
-  ]
   route_table_ids = [
     aws_route_table.private_a.id,
     aws_route_table.private_b.id

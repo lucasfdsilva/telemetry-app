@@ -61,5 +61,44 @@ resource "aws_ecs_task_definition" "telemetry_app" {
   tags = local.common_tags
 }
 
+resource "aws_security_group" "ecs_service" {
+  description = "Access for the ECS Service"
+  name        = "${local.prefix}-ecs-service"
+  vpc_id      = aws_vpc.main.id
+
+  egress = {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress = {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_ecs_service" "telemetry_app" {
+  name            = "${local.prefix}-telemetry-app"
+  cluster         = aws_ecs_cluster.main.name
+  task_definition = aws_ecs_task_definition.telemetry_app.family
+  desired_count   = 1
+  launch_type     = "FARGATE"
+  platform_version = "1.4.0"
+
+  network_configuration {
+    subnets = [
+      aws_subnet.public_a.id,
+      aws_subnet.public_b.id
+    ]
+  }
+
+  security_groups  = [aws_security_group.ecs_service.id]
+}
 
 

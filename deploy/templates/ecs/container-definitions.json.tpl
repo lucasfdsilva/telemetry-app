@@ -1,13 +1,13 @@
 [
     {
         "name": "telemetry-app",
-        "image": "${app_image}",
+        "image": "${telemetry_app_image}",
         "essential": true,
         "memoryReservation": 512,
         "environment": [
             {
-                "name": "ENV",
-                "value": "${terraform.workspace}"
+                "name": "prefix",
+                "value": "${prefix}"
             }
         ],
         "logConfiguration": {

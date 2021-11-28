@@ -69,9 +69,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY
-        docker tag $ECR_REGISTRY/$ECR_REPOSITORY $ECR_REPOSITORY:latest
-        docker push $ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
         
   staging_plan:
@@ -93,7 +91,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
-        run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        run: export TF_VAR_ecr_image_telemetry_app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Terraform Init
         run: terraform init
@@ -124,7 +122,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
-        run: export TF_VAR_ecr_image_api=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        run: export TF_VAR_ecr_image_telemetry_app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Terraform Init
         run: terraform init

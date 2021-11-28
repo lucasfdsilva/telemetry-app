@@ -1,3 +1,5 @@
+import os
+
 import botocore
 import boto3
 import logging
@@ -11,7 +13,7 @@ logger = logging.getLogger()
 def get_stats():
     try:
         current_stats_response = client.get_item(
-            TableName='temperature_readings_aggregation',
+            TableName=f"{os.environ['PREFIX']}-temperature-readings-aggregation",
             Key={
                 'aggregation_period': {
                       'S': 'total'

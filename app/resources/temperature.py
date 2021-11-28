@@ -1,3 +1,5 @@
+import os
+
 from flask_restful import Resource
 from flask_restful import reqparse
 from flask_restful import inputs
@@ -45,7 +47,7 @@ class TemperatureReading(Resource):
 
         try:
             save_temperature_reading = client.put_item(
-                TableName='temperature_readings',
+                TableName=f"{os.environ['PREFIX']}-temperature-readings",
                 Item={
                     'sensor_id': {
                         'S': data['sensorId']

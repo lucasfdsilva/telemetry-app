@@ -14,12 +14,7 @@ resource "aws_dynamodb_table" "temperature_readings" {
     type = "S"
   }
 
-  tags = merge(
-    local.common_tags,
-    tomap({
-      "Name" = "${local.prefix}-temperature-readings"
-    })
-  )
+  tags = local.common_tags
 }
 
 
@@ -33,10 +28,5 @@ resource "aws_dynamodb_table" "temperature_readings_aggregation" {
     type = "S"
   }
 
-  tags = merge(
-    local.common_tags,
-    tomap({
-      "Name" = "${local.prefix}-temperature-readings-aggregation"
-    })
-  )
+  tags = local.common_tags
 }

@@ -1,4 +1,4 @@
-name: CI/CD Workflow
+name: CI/CD Express
 
 env:
   ECR_REPO: telemetry-app

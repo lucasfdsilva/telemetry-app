@@ -7,29 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:     
-          
-  terraform_validation:
-    defaults:
-        run:
-          working-directory: ./deploy
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    
-    - uses: hashicorp/setup-terraform@v1.2.1
-      
-    - name: Terraform Init with no Backend
-      run: terraform init -backend=false
-    
-    - name: Terraform FMT
-      run: terraform fmt -check
-      
-    - name: Terraform Validate
-      run: terraform validate
-       
-
   build_and_push:
-    needs: lint
     runs-on: ubuntu-latest
     steps:
     - name: Configure AWS credentials

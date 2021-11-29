@@ -108,10 +108,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
-
-      - uses: chrislennon/action-aws-cli@v1.1
-
-      - run: | 
+        
+      - name: Install AWS CLI
+        run: | 
+          sudo apt-get install python3-pip
+          pip install awscli --upgrade
+        
+      - name: Conditional Put-Item API Call to DynamoDB
+        run: | 
+          sudo apt-get install python3-pip
+          pip install awscli --upgrade
           aws dynamodb put-item \
           --table-name ${{ env.DYNAMODB_TABLE }} \
           --item file://deploy/templates/dynamodb/seed.json \

@@ -1,0 +1,17 @@
+{
+  "aggregation_period": {
+    "S": "total"
+  },
+  "maximum": {
+    "N": "0"
+  },
+  "minimum": {
+    "N": "0"
+  },
+  "total_temperature_sum": {
+    "N": "0"
+  },
+  "total_readings_count": {
+    "N": "0"
+  }
+}

@@ -9,7 +9,6 @@ import boto3
 import logging
 
 from resources.stats import Stats
-from common.get_stats import get_stats
 from common.non_empty_string import non_empty_string
 
 
@@ -67,7 +66,7 @@ class TemperatureReading(Resource):
             else:
                 raise error
 
-        current_stats = get_stats()
+        current_stats = Stats.get_stats()
 
         if current_stats['total_readings_count'] >= 0:
             maximum_temperature = max(

@@ -6,8 +6,6 @@ import botocore
 import boto3
 import logging
 
-from common.get_stats import get_stats
-
 
 client = boto3.client('dynamodb')
 
@@ -16,6 +14,44 @@ logger = logging.getLogger()
 
 
 class Stats(Resource):
+
+    def get_stats():
+        try:
+            current_stats_response = client.get_item(
+                TableName=f"{os.environ['PREFIX']}-temperature-readings-aggregation",
+                Key={
+                    'aggregation_period': {
+                        'S': 'total'
+                    },
+                },
+                AttributesToGet=[
+                    'maximum',
+                    'minimum',
+                    'total_temperature_sum',
+                    'total_readings_count',
+                ],
+                ConsistentRead=True
+            )
+        except botocore.exceptions.ClientError as error:
+            if error.response['Error']['Code'] == 'LimitExceededException':
+                logger.warn(
+                    'API call limit exceeded; backing off and retrying...')
+            else:
+                raise error
+
+        maximum = int(current_stats_response['Item']['maximum']['N'])
+        minimum = int(current_stats_response['Item']['minimum']['N'])
+        total_temperature_sum = int(
+            current_stats_response['Item']['total_temperature_sum']['N'])
+        total_readings_count = int(
+            current_stats_response['Item']['total_readings_count']['N'])
+
+        return {
+            "Maximum": maximum,
+            "Minimum": minimum,
+            "total_temperature_sum": total_temperature_sum,
+            "total_readings_count": total_readings_count
+        }
 
     def update_stats(count_increment_value, temperature, maximum_temperature, minimum_temperature):
 
@@ -58,7 +94,7 @@ class Stats(Resource):
 
     def get(self):
 
-        current_stats = get_stats()
+        current_stats = Stats.get_stats()
 
         if current_stats['total_readings_count'] > 0:
             average_temperature = round(current_stats['total_temperature_sum']

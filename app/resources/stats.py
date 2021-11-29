@@ -60,8 +60,11 @@ class Stats(Resource):
 
         current_stats = get_stats()
 
-        average_temperature = round(current_stats['total_temperature_sum']
-                                    / current_stats['total_readings_count'])
+        if current_stats['total_readings_count'] > 0:
+            average_temperature = round(current_stats['total_temperature_sum']
+                                        / current_stats['total_readings_count'])
+        else:
+            average_temperature = 0
 
         return {
             "Maximum": current_stats['Maximum'],

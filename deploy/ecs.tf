@@ -7,7 +7,7 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_iam_policy" "task_definition_role_policy" {
   name        = "${local.prefix}-task-exec-role-policy"
   path        = "/"
-  description = "Allow retrieving of images and adding to logs"
+  description = "Allow retrieving of images, adding to logs writing/reading from DynamoDB"
   policy      = file("./templates/ecs/task-exec-role.json")
 }
 
@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "telemetry_app" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.task_execution_role.arn
-  task_role_arn            = aws_iam_role.telemetry_app_iam_role.arn
+  task_role_arn            = aws_iam_role.task_execution_role.arn
 
   tags = local.common_tags
 }

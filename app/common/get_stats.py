@@ -26,7 +26,8 @@ def get_stats():
                 'minimum',
                 'total_temperature_sum',
                 'total_readings_count',
-            ]
+            ],
+            ConsistentRead=True
         )
     except botocore.exceptions.ClientError as error:
         if error.response['Error']['Code'] == 'LimitExceededException':
@@ -34,6 +35,8 @@ def get_stats():
                 'API call limit exceeded; backing off and retrying...')
         else:
             raise error
+
+    print(current_stats_response)
 
     if current_stats_response['Item'] is None:
         Stats.update_stats(0, 0,

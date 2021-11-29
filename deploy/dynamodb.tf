@@ -17,7 +17,6 @@ resource "aws_dynamodb_table" "temperature_readings" {
   tags = local.common_tags
 }
 
-
 resource "aws_dynamodb_table" "temperature_readings_aggregation" {
   name         = "${local.prefix}-temperature-readings-aggregation"
   billing_mode = "PAY_PER_REQUEST"
@@ -29,4 +28,19 @@ resource "aws_dynamodb_table" "temperature_readings_aggregation" {
   }
 
   tags = local.common_tags
+}
+
+resource "aws_dynamodb_table_item" "stats_aggregation" {
+  table_name = aws_dynamodb_table.temperature_readings_aggregation.name
+  hash_key   = aws_dynamodb_table.temperature_readings_aggregation.aggregation_period
+
+  item = <<ITEM
+{
+  "aggregation_period": {"S": "total"},
+  "maximum": {"N": "0"},
+  "minimum": {"N": "0"},
+  "total_readings_count": {"N": "0"},
+  "total_temperature_sum": {"N": "0"}
+}
+ITEM
 }

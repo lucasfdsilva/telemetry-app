@@ -1,7 +1,7 @@
 [
     {
         "name": "telemetry-app",
-        "image": "${telemetry_app_image}",
+        "image": "${ TF_VAR_ecr_telemetry_app_image }",
         "essential": true,
         "memoryReservation": 512,
         "environment": [

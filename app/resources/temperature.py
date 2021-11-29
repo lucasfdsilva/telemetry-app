@@ -69,10 +69,14 @@ class TemperatureReading(Resource):
 
         current_stats = get_stats()
 
-        maximum_temperature = max(
-            data['temperature'], current_stats['Maximum'])
-        minimum_temperature = min(
-            data['temperature'], current_stats['Minimum'])
+        if current_stats['total_readings_count'] >= 0:
+            maximum_temperature = max(
+                data['temperature'], current_stats['Maximum'])
+            minimum_temperature = min(
+                data['temperature'], current_stats['Minimum'])
+        else:
+            maximum_temperature = data['temperature']
+            minimum_temperature = data['temperature']
 
         update_stats_response = Stats.update_stats(
             data['temperature'], maximum_temperature, minimum_temperature)

@@ -12,5 +12,5 @@ variable "owner" {
 
 variable "ecr_image_telemetry_app" {
   description = "ECR image for the telemetry app"
-  default     = "128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:f7584a58d56d957328e61810b868544dd9328992"
+  default     = "128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:c684ae5c9e9879879049db5c5288d4cd7d226c9e"
 }

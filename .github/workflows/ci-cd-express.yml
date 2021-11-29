@@ -12,7 +12,7 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     outputs:
-      TF_VAR_ecr_telemetry_app_image: ${{ steps.image-build.outputs.TF_VAR_ecr_telemetry_app_image }}
+      telemetry_app_image: ${{ steps.image-build.outputs.telemetry_app_image }}
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -36,7 +36,7 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=TF_VAR_ecr_telemetry_app_image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo "::set-output name=telemetry_app_image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         
         
   staging_plan:
@@ -45,8 +45,6 @@ jobs:
         run:
           working-directory: ./deploy
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_ecr_telemetry_app_image: ${{ needs.build_and_push.outputs.TF_VAR_ecr_telemetry_app_image }}
     steps:
       - uses: actions/checkout@v2
       
@@ -60,7 +58,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
-        run: export ecr_image_telemetry_app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        run: export TF_VAR_telemetry_app_image=${{ needs.build_and_push.outputs.telemetry_app_image }}
 
       - name: Terraform Init
         run: terraform init
@@ -91,7 +89,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1.2.1
         
       - name: Export ECR Image Full API variable
-        run: export ecr_image_telemetry_app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        run: export TF_VAR_telemetry_app_image=${{ needs.build_and_push.outputs.telemetry_app_image }}
 
       - name: Terraform Init
         run: terraform init

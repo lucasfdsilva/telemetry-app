@@ -40,7 +40,7 @@ data "template_file" "telemetry_app_container_definitions" {
   template = file("./templates/ecs/container-definitions.json.tpl")
 
   vars = {
-    telemetry_app_image = var.TF_VAR_ecr_telemetry_app_image
+    telemetry_app_image = var.telemetry_app_image
     prefix              = "${var.prefix}-${terraform.workspace}"
     log_group_name      = aws_cloudwatch_log_group.ecs_task_logs.name
     log_group_region    = data.aws_region.current.name

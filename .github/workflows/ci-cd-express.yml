@@ -96,6 +96,7 @@ jobs:
         run: terraform apply -auto-approve
         
   dynamodb_seed:
+    needs: staging_apply
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

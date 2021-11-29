@@ -17,7 +17,7 @@ logger = logging.getLogger()
 
 class Stats(Resource):
 
-    def update_stats(temperature, maximum_temperature, minimum_temperature):
+    def update_stats(count_increment_value, temperature, maximum_temperature, minimum_temperature):
 
         try:
             update_stats_response = client.update_item(
@@ -33,7 +33,7 @@ class Stats(Resource):
                                 minimum= :lowest_temperature""",
                 ExpressionAttributeValues={
                     ':count_increment_value': {
-                        "N": "1"
+                        "N": str(count_increment_value)
                     },
                     ':temperature_value': {
                         "N": str(temperature)

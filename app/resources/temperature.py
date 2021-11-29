@@ -78,7 +78,7 @@ class TemperatureReading(Resource):
             maximum_temperature = data['temperature']
             minimum_temperature = data['temperature']
 
-        update_stats_response = Stats.update_stats(
-            data['temperature'], maximum_temperature, minimum_temperature)
+        update_stats_response = Stats.update_stats(1,
+                                                   data['temperature'], maximum_temperature, minimum_temperature)
 
         return {"message": "Temperature reading recorded successfully"}

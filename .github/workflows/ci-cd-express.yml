@@ -1,0 +1,94 @@
+name: CI/CD Express
+
+env:
+  ECR_REPO: telemetry-app
+
+on:
+  workflow_dispatch:
+
+jobs:     
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - uses: actions/checkout@v2
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.ECR_REPO }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        
+        
+  staging_plan:
+    needs: build_and_push
+    defaults:
+        run:
+          working-directory: ./deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+    
+      - uses: hashicorp/setup-terraform@v1.2.1
+        
+      - name: Export ECR Image Full API variable
+        run: export TF_VAR_ecr_image_telemetry_app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select or Create
+        run: terraform workspace select staging || terraform workspace new staging
+        
+      - name: Terraform Plan
+        run: terraform plan
+        
+        
+  staging_apply:
+    needs: staging_plan
+    defaults:
+        run:
+          working-directory: ./deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - uses: hashicorp/setup-terraform@v1.2.1
+        
+      - name: Export ECR Image Full API variable
+        run: export TF_VAR_ecr_image_telemetry_app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Terraform Workspace Select
+        run: terraform workspace select staging
+        
+      - name: Terraform Apply
+        run: terraform apply -auto-approve

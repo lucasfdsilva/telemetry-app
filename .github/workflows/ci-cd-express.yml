@@ -126,4 +126,5 @@ jobs:
           aws dynamodb put-item \
           --table-name ${{ env.DYNAMODB_TABLE }} \
           --item file://deploy/templates/dynamodb/seed.json \
-          --condition-expression "attribute_not_exists(total_readings_count)"
+          --condition-expression "attribute_not_exists(total_readings_count)" \
+          || true

@@ -79,6 +79,7 @@ jobs:
         
   staging_plan:
     needs: build_and_push
+    if: always()
     defaults:
         run:
           working-directory: ./deploy
@@ -109,6 +110,7 @@ jobs:
         
   staging_apply:
     needs: staging_plan
+    if: always()
     defaults:
         run:
           working-directory: ./deploy
@@ -139,6 +141,7 @@ jobs:
         
   staging_dynamodb_seed:
     needs: staging_apply
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

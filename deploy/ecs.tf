@@ -44,7 +44,7 @@ data "template_file" "telemetry_app_container_definitions" {
     prefix              = "${var.prefix}-${terraform.workspace}"
     log_group_name      = aws_cloudwatch_log_group.ecs_task_logs.name
     log_group_region    = data.aws_region.current.name
-    allowed_hosts       = aws_lb.telemetry_app.dns_name
+    allowed_hosts       = aws_route53_record.telemetry_app.fqdn
   }
 }
 
@@ -119,6 +119,9 @@ resource "aws_ecs_service" "telemetry_app" {
     container_name   = "telemetry-app"
     container_port   = 9000
   }
+
+  #Ensures that the LB listener for HTTPS gets created before creating the ECS Service
+  depends_on = [aws_lb_listener.telemetry_app]
 }
 
 

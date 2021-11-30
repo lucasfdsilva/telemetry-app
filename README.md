@@ -2,7 +2,7 @@
 
 # Telemetry App &middot; [![GitHub Super-Linter](https://github.com/lucasfdsilva/telemetry-app/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-This is a REST API application the takes in fake temperature readings from remote sensors and store these readings in a NoSQL database. The application also provides temperature statistics such as Max, Min and Average temperatures, based on the readings received.
+This is a REST API application that takes in fake temperature readings from remote sensors and store these readings in a NoSQL database. The application also provides temperature statistics such as Max, Min and Average temperatures, based on the readings received.
 
 
 ## API Reference

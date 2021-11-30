@@ -171,7 +171,7 @@ docker-compose -f deploy/docker-compose.yml run --rm terraform destroy
 ## CI/CD Pipeline
 In this repository you will find GitHub Actions workflows that automate the process of continuous integrations and continuous deployment of this application.
 
-The workflows available make it possible to have the environments "staging" and "prod being constantly and seamlessly tested, created and updated. 
+The workflows available make it possible to have the environments "staging" and "prod" being constantly and seamlessly tested, created and updated. 
 
 The Staging environment is built following changes and updates to the "main" branch, while "prod" is updated when new commits and pull requests are made to the "prod" branch.
 

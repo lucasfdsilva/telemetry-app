@@ -96,6 +96,7 @@ cd telemetry-app/
 pip install -r /requirements.txt
 export FLASK_APP=wsgi.py
 export FLASK_ENV=development
+export PREFIX=telemetry-dev
 ```
 
 

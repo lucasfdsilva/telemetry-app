@@ -7,11 +7,12 @@ env:
 on:
   push:
     branches:
-      - main
+      - 'main'
+      - 'prod'
   pull_request:
     branches:
-      - main
-      - prod
+      - 'main'
+      - 'prod'
 
 jobs:
 

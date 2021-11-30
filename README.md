@@ -14,7 +14,7 @@ The API is available at: https://prod.lucastelemetry3m.com
 
 The API running on the staging environment is also available via: https://staging.lucastelemetry3m.com
 
-The only reason why the staging environment is exposed is to demonstrate the multiple environments development strategy implemented. More about that in the [CI/CD Pipeline Section](https://github.com/lucasfdsilva/telemetry-app/tree/main/README.md#ci/cd-pipeline)
+The only reason why the staging environment is exposed is to demonstrate the multiple environments development strategy implemented. More about that in the [CI/CD Pipeline Section](https://github.com/lucasfdsilva/telemetry-app/tree/main/README.md#cicd-pipeline)
 
 
 ### Endpoints

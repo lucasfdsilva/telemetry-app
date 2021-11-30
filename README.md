@@ -38,7 +38,7 @@ The API exposes two endpoints:
   **Expected payload sample:** <br>
   {
     "sensorId": "202",
-    "temperature": "18",
+    "temperature": 18,
     "timestamp": "YYYY-MM-DDTHH:MM:SS"
   }
 
@@ -103,10 +103,10 @@ export FLASK_ENV=development
 **Please note**
 Terraform will use your AWS account to build all resources required. This will in turn generate costs in you AWS account.
 
-**Estimated costs for running the infrastructure required (per environment)**
-**Monthly:** $125.19
-**Daily:** $4.04
-**Hourly:** $0.17
+**Estimated costs for running the infrastructure required (per environment)** <br>
+**Monthly:** $125.19 <br>
+**Daily:** $4.04 <br>
+**Hourly:** $0.17 <br>
 
 Please refer to the [Architecture Diagram](https://github.com/lucasfdsilva/telemetry-app/tree/main/docs) to understand which resources are required to run this application successfully.
 

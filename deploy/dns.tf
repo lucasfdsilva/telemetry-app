@@ -4,7 +4,7 @@ data "aws_route53_zone" "zone" {
 
 resource "aws_route53_record" "telemetry_app" {
   zone_id = data.aws_route53_zone.zone.zone_id
-  name    = "${lookup(var.subdomain, terraform.workspace)}" + "${data.aws_route53_zone.zone.name}"
+  name    = join("", [lookup(var.subdomain, terraform.workspace), data.aws_route53_zone.zone.name])
   type    = "CNAME"
   ttl     = "300"
 

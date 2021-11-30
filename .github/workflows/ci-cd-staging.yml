@@ -8,17 +8,11 @@ on:
   push:
     branches:
       - 'main'
-      - 'prod'
-  pull_request:
-    branches:
-      - 'main'
-      - 'prod'
 
 jobs:
 
   lint:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Invoke Lint Code Base Workflow
         uses: benc-uk/workflow-dispatch@v1
@@ -50,7 +44,6 @@ jobs:
   build_and_push:
     needs: [lint, terraform_validation]
     runs-on: ubuntu-latest
-    if: always()
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -80,7 +73,6 @@ jobs:
         
   staging_plan:
     needs: build_and_push
-    if: always()
     defaults:
         run:
           working-directory: ./deploy
@@ -111,7 +103,6 @@ jobs:
         
   staging_apply:
     needs: staging_plan
-    if: always()
     defaults:
         run:
           working-directory: ./deploy
@@ -142,7 +133,6 @@ jobs:
         
   staging_dynamodb_seed:
     needs: staging_apply
-    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -166,99 +156,6 @@ jobs:
           pip install awscli --upgrade
           aws dynamodb put-item \
           --table-name telemetry-staging-temperature-readings-aggregation \
-          --item file://deploy/templates/dynamodb/seed.json \
-          --condition-expression "attribute_not_exists(total_readings_count)" \
-          || true
-
-
-  prod_plan:
-    needs: staging_apply
-    if: success() && github.ref == 'refs/heads/prod'
-    defaults:
-        run:
-          working-directory: ./deploy
-    runs-on: ubuntu-latest
-    env:
-      TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-    
-      - uses: hashicorp/setup-terraform@v1.2.1
-
-      - name: Terraform Init
-        run: terraform init
-        
-      - name: Terraform Workspace Select or Create
-        run: terraform workspace select prod || terraform workspace new prod
-        
-      - name: Terraform Plan
-        run: terraform plan
-
-  
-  prod_apply:
-    needs: prod_plan
-    if: success() && github.ref == 'refs/heads/prod'
-    defaults:
-        run:
-          working-directory: ./deploy
-    runs-on: ubuntu-latest
-    env:
-      TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-
-      - uses: hashicorp/setup-terraform@v1.2.1
-
-      - name: Terraform Init
-        run: terraform init
-        
-      - name: Terraform Workspace Select
-        run: terraform workspace select prod
-        
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-
-        
-  prod_dynamodb_seed:
-    needs: prod_apply
-    if: success() && github.ref == 'refs/heads/prod'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-        
-      - name: Install AWS CLI
-        run: | 
-          sudo apt-get install python3-pip
-          pip install awscli --upgrade
-        
-      - name: Conditional Put-Item API Call to DynamoDB
-        run: | 
-          sudo apt-get install python3-pip
-          pip install awscli --upgrade
-          aws dynamodb put-item \
-          --table-name telemetry-prod-temperature-readings-aggregation \
           --item file://deploy/templates/dynamodb/seed.json \
           --condition-expression "attribute_not_exists(total_readings_count)" \
           || true

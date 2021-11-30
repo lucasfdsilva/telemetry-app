@@ -68,7 +68,7 @@ class TemperatureReading(Resource):
 
         current_stats = Stats.get_stats()
 
-        if current_stats['total_readings_count'] >= 0:
+        if current_stats['total_readings_count'] > 0:
             maximum_temperature = max(
                 data['temperature'], current_stats['Maximum'])
             minimum_temperature = min(

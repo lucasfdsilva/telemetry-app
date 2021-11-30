@@ -2,7 +2,7 @@
 
 # Telemetry App &middot; [![GitHub Super-Linter](https://github.com/lucasfdsilva/telemetry-app/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-This is a REST API application the takes in fake temperature readings from remote sensors and store these readings in a NoSQL database. The application also provides temperature statistics such as Max, Min and Average temperatures, based on the readings received.
+This is a REST API application that takes in fake temperature readings from remote sensors and store these readings in a NoSQL database. The application also provides temperature statistics such as Max, Min and Average temperatures, based on the readings received.
 
 
 ## API Reference
@@ -10,11 +10,11 @@ A Swagger documentation page is currently under development for the API but in t
 
 
 ### Public URL
-The API is available at: https://lucastelemetry3m.com
+The API is available at: https://prod.lucastelemetry3m.com
 
 The API running on the staging environment is also available via: https://staging.lucastelemetry3m.com
 
-The only reason why the staging environment is exposed is to demonstrate the multiple environments development strategy implemented. More about that in the [CI/CD Pipeline Section](https://github.com/lucasfdsilva/telemetry-app/tree/main/README.md#ci/cd-pipeline)
+The only reason why the staging environment is exposed is to demonstrate the multiple environments development strategy implemented. More about that in the [CI/CD Pipeline Section](https://github.com/lucasfdsilva/telemetry-app/tree/main/README.md#cicd-pipeline)
 
 
 ### Endpoints
@@ -38,7 +38,7 @@ The API exposes two endpoints:
   **Expected payload sample:** <br>
   {
     "sensorId": "202",
-    "temperature": "18",
+    "temperature": 18,
     "timestamp": "YYYY-MM-DDTHH:MM:SS"
   }
 
@@ -96,6 +96,7 @@ cd telemetry-app/
 pip install -r /requirements.txt
 export FLASK_APP=wsgi.py
 export FLASK_ENV=development
+export PREFIX=telemetry-dev
 ```
 
 
@@ -103,10 +104,10 @@ export FLASK_ENV=development
 **Please note**
 Terraform will use your AWS account to build all resources required. This will in turn generate costs in you AWS account.
 
-**Estimated costs for running the infrastructure required (per environment)**
-**Monthly:** $125.19
-**Daily:** $4.04
-**Hourly:** $0.17
+**Estimated costs for running the infrastructure required (per environment)** <br>
+**Monthly:** $125.19 <br>
+**Daily:** $4.04 <br>
+**Hourly:** $0.17 <br>
 
 Please refer to the [Architecture Diagram](https://github.com/lucasfdsilva/telemetry-app/tree/main/docs) to understand which resources are required to run this application successfully.
 
@@ -171,7 +172,7 @@ docker-compose -f deploy/docker-compose.yml run --rm terraform destroy
 ## CI/CD Pipeline
 In this repository you will find GitHub Actions workflows that automate the process of continuous integrations and continuous deployment of this application.
 
-The workflows available make it possible to have the environments "staging" and "prod being constantly and seamlessly tested, created and updated. 
+The workflows available make it possible to have the environments "staging" and "prod" being constantly and seamlessly tested, created and updated. 
 
 The Staging environment is built following changes and updates to the "main" branch, while "prod" is updated when new commits and pull requests are made to the "prod" branch.
 

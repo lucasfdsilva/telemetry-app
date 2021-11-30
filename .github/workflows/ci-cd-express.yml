@@ -11,8 +11,6 @@ on:
 jobs:     
   build_and_push:
     runs-on: ubuntu-latest
-    outputs:
-      telemetry_app_image: ${{ steps.image-build.outputs.telemetry_app_image }}
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -34,12 +32,10 @@ jobs:
         ECR_REPOSITORY: ${{ env.ECR_REPO }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REPOSITORY:$IMAGE_TAG
-        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
-        docker push $ECR_REPOSITORY:latest
-        echo "::set-output name=telemetry_app_image::$ECR_REPOSITORY:$IMAGE_TAG"
-        
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         
   staging_plan:
     needs: build_and_push
@@ -48,7 +44,7 @@ jobs:
           working-directory: ./deploy
     runs-on: ubuntu-latest
     env:
-      TF_VAR_telemetry_app_image: ${{needs.build_and_push.outputs.telemetry_app_image}}
+      TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:${{ github.sha }}
     steps:
       - uses: actions/checkout@v2
 
@@ -80,7 +76,7 @@ jobs:
           working-directory: ./deploy
     runs-on: ubuntu-latest
     env:
-      TF_VAR_telemetry_app_image: ${{needs.build_and_push.outputs.telemetry_app_image}}
+      TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:${{ github.sha }}
     steps:
       - uses: actions/checkout@v2
       

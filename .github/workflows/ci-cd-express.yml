@@ -34,9 +34,11 @@ jobs:
         ECR_REPOSITORY: ${{ env.ECR_REPO }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=telemetry_app_image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REPOSITORY:$IMAGE_TAG
+        docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
+        docker push $ECR_REPOSITORY:latest
+        echo "::set-output name=telemetry_app_image::$ECR_REPOSITORY:$IMAGE_TAG"
         
         
   staging_plan:
@@ -78,7 +80,7 @@ jobs:
           working-directory: ./deploy
     runs-on: ubuntu-latest
     env:
-      TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:d7b59031e09688774e0bcb86454c49c23361c351
+      TF_VAR_telemetry_app_image: ${{needs.build_and_push.outputs.telemetry_app_image}}
     steps:
       - uses: actions/checkout@v2
       

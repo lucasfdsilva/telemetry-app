@@ -173,7 +173,7 @@ jobs:
 
   prod_plan:
     needs: staging_apply
-    if: github.ref == 'refs/heads/prod'
+    if: success() && github.ref == 'refs/heads/prod'
     defaults:
         run:
           working-directory: ./deploy
@@ -204,7 +204,7 @@ jobs:
   
   prod_apply:
     needs: prod_plan
-    if: github.ref == 'refs/heads/prod'
+    if: success() && github.ref == 'refs/heads/prod'
     defaults:
         run:
           working-directory: ./deploy
@@ -235,7 +235,7 @@ jobs:
         
   prod_dynamodb_seed:
     needs: prod_apply
-    if: github.ref == 'refs/heads/prod'
+    if: success() && github.ref == 'refs/heads/prod'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

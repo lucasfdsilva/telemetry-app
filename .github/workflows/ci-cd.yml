@@ -3,7 +3,6 @@ name: CI/CD Workflow
 env:
   ECR_REPO: telemetry-app
   AWS_REGION: eu-west-1
-  DYNAMODB_TABLE: telemetry-staging-temperature-readings-aggregation
 
 on:
   push:
@@ -14,11 +13,11 @@ on:
     branches:
       - main
       - prod
-  workflow_dispatch:
 
 jobs:
 
   lint:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -55,6 +54,7 @@ jobs:
 
 
   build_and_push:
+    needs: [lint, terraform_validation]
     runs-on: ubuntu-latest
     steps:
     - name: Configure AWS credentials
@@ -141,6 +141,7 @@ jobs:
         
       - name: Terraform Apply
         run: terraform apply -auto-approve
+
         
   staging_dynamodb_seed:
     needs: staging_apply

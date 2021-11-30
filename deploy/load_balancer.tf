@@ -30,6 +30,24 @@ resource "aws_lb_listener" "telemetry_app" {
   protocol          = "HTTP"
 
   default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "telemetry_app_https" {
+  load_balancer_arn = aws_lb.telemetry_app.arn
+  port              = 443
+  protocol          = "HTTPS"
+
+  certificate_arn = aws_acm_certificate_validation.cert.certificate_arn
+
+  default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.telemetry_app.arn
   }
@@ -44,6 +62,13 @@ resource "aws_security_group" "lb" {
     protocol    = "tcp"
     from_port   = 80
     to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
     cidr_blocks = ["0.0.0.0/0"]
   }
 

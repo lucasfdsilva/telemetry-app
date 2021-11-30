@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - prod
   pull_request:
     branches:
       - main
@@ -18,6 +17,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Invoke Lint Code Base Workflow
         uses: benc-uk/workflow-dispatch@v1
@@ -49,6 +49,7 @@ jobs:
   build_and_push:
     needs: [lint, terraform_validation]
     runs-on: ubuntu-latest
+    if: always()
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1

@@ -1,0 +1,141 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "VisualEditor0",
+      "Effect": "Allow",
+      "Action": [
+        "logs:GetLogRecord",
+        "acm:DeleteCertificate",
+        "logs:DeleteSubscriptionFilter",
+        "logs:DescribeSubscriptionFilters",
+        "logs:StartQuery",
+        "dynamodb:*",
+        "logs:DescribeMetricFilters",
+        "logs:ListLogDeliveries",
+        "logs:CreateLogStream",
+        "logs:TagLogGroup",
+        "acm:RequestCertificate",
+        "logs:CancelExportTask",
+        "logs:DeleteRetentionPolicy",
+        "logs:GetLogEvents",
+        "logs:FilterLogEvents",
+        "ecr:BatchCheckLayerAvailability",
+        "logs:DescribeDestinations",
+        "ecr:GetAuthorizationToken",
+        "acm:AddTagsToCertificate",
+        "logs:StopQuery",
+        "logs:DeleteQueryDefinition",
+        "logs:CreateLogGroup",
+        "acm:ListTagsForCertificate",
+        "iam:*",
+        "logs:PutMetricFilter",
+        "logs:CreateLogDelivery",
+        "logs:DescribeExportTasks",
+        "acm:DescribeCertificate",
+        "logs:GetQueryResults",
+        "acm:RemoveTagsFromCertificate",
+        "logs:UpdateLogDelivery",
+        "ecs:*",
+        "ec2:*",
+        "logs:PutSubscriptionFilter",
+        "logs:ListTagsLogGroup",
+        "logs:DescribeLogStreams",
+        "logs:DeleteLogStream",
+        "logs:GetLogDelivery",
+        "logs:CreateExportTask",
+        "logs:DeleteMetricFilter",
+        "logs:DeleteLogDelivery",
+        "logs:AssociateKmsKey",
+        "logs:DescribeQueryDefinitions",
+        "logs:PutDestination",
+        "logs:DescribeResourcePolicies",
+        "logs:DescribeQueries",
+        "logs:DisassociateKmsKey",
+        "logs:UntagLogGroup",
+        "logs:DescribeLogGroups",
+        "logs:DeleteLogGroup",
+        "logs:PutDestinationPolicy",
+        "elasticloadbalancing:*",
+        "logs:TestMetricFilter",
+        "logs:PutQueryDefinition",
+        "logs:DeleteDestination",
+        "logs:PutLogEvents",
+        "route53:*",
+        "logs:PutRetentionPolicy",
+        "logs:GetLogGroupFields"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "VisualEditor1",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:PutImageTagMutability",
+        "ecr:StartImageScan",
+        "ecr:DescribeImageReplicationStatus",
+        "ecr:ListTagsForResource",
+        "s3:ListBucket",
+        "ecr:UploadLayerPart",
+        "ecr:BatchDeleteImage",
+        "ecr:ListImages",
+        "ecr:DeleteRepository",
+        "ecr:CompleteLayerUpload",
+        "ecr:TagResource",
+        "ecr:DescribeRepositories",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:ReplicateImage",
+        "ecr:GetLifecyclePolicy",
+        "ecr:PutLifecyclePolicy",
+        "ecr:DescribeImageScanFindings",
+        "ecr:GetLifecyclePolicyPreview",
+        "ecr:CreateRepository",
+        "ecr:PutImageScanningConfiguration",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:DeleteLifecyclePolicy",
+        "ecr:PutImage",
+        "ecr:UntagResource",
+        "ecr:BatchGetImage",
+        "ecr:DescribeImages",
+        "ecr:StartLifecyclePolicyPreview",
+        "ecr:InitiateLayerUpload",
+        "ecr:GetRepositoryPolicy"
+      ],
+      "Resource": [
+        "arn:aws:ecr:eu-west-1:*:repository/telemetry-app",
+        "arn:aws:s3:::telemetry-app-devops-tfstate"
+      ]
+    },
+    {
+      "Sid": "VisualEditor2",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::telemetry-app-devops-tfstate/*"
+    },
+    {
+      "Sid": "VisualEditor3",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetRegistryPolicy",
+        "ecr:DescribeRegistry",
+        "ecr:GetAuthorizationToken",
+        "ecr:PutReplicationConfiguration"
+      ],
+      "Resource": "arn:aws:ecr:eu-west-1:*:repository/telemetry-app"
+    },
+    {
+      "Sid": "VisualEditor4",
+      "Effect": "Deny",
+      "Action": "ec2:RunInstances",
+      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Condition": {
+        "ForAnyValue:StringNotLike": {
+          "ec2:InstanceType": "t2.micro"
+        }
+      }
+    }
+  ]
+}

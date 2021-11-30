@@ -10,7 +10,7 @@ A Swagger documentation page is currently under development for the API but in t
 
 
 ### Public URL
-The API is available at: https://lucastelemetry3m.com
+The API is available at: https://prod.lucastelemetry3m.com
 
 The API running on the staging environment is also available via: https://staging.lucastelemetry3m.com
 

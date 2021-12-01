@@ -147,6 +147,6 @@ jobs:
           pip install awscli --upgrade
           aws dynamodb put-item \
           --table-name telemetry-prod-temperature-readings-aggregation \
-          --item file://deploy/templates/dynamodb/seed.json \
+          --item file://terraform/templates/dynamodb/seed.json \
           --condition-expression "attribute_not_exists(total_readings_count)" \
           || true

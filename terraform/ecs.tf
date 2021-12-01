@@ -30,12 +30,6 @@ resource "aws_iam_role" "telemetry_app_iam_role" {
   tags = local.common_tags
 }
 
-resource "aws_cloudwatch_log_group" "ecs_task_logs" {
-  name = "${local.prefix}-telemetry-app"
-
-  tags = local.common_tags
-}
-
 data "template_file" "telemetry_app_container_definitions" {
   template = file("./templates/ecs/container-definitions.json.tpl")
 

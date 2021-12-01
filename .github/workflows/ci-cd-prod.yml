@@ -4,6 +4,7 @@ env:
   ECR_REPO: telemetry-app
   AWS_REGION: eu-west-1
 
+
 on:
   push:
     branches:
@@ -14,7 +15,7 @@ jobs:
   terraform_validation:
     defaults:
         run:
-          working-directory: ./deploy
+          working-directory: ./terraform
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -34,14 +35,13 @@ jobs:
   build_and_push:
     needs: terraform_validation
     runs-on: ubuntu-latest
-    if: always()
     steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1
+        aws-region: ${{ env.AWS_REGION }}
     
     - name: Login to Amazon ECR
       id: login-ecr
@@ -66,7 +66,7 @@ jobs:
     needs: build_and_push
     defaults:
         run:
-          working-directory: ./deploy
+          working-directory: ./terraform
     runs-on: ubuntu-latest
     env:
       TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:${{ github.sha }}
@@ -78,7 +78,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
+          aws-region: ${{ env.AWS_REGION }}
     
       - uses: hashicorp/setup-terraform@v1.2.1
 
@@ -96,7 +96,7 @@ jobs:
     needs: prod_plan
     defaults:
         run:
-          working-directory: ./deploy
+          working-directory: ./terraform
     runs-on: ubuntu-latest
     env:
       TF_VAR_telemetry_app_image: 128363080680.dkr.ecr.eu-west-1.amazonaws.com/telemetry-app:${{ github.sha }}
@@ -108,7 +108,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - uses: hashicorp/setup-terraform@v1.2.1
 
@@ -134,7 +134,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
+          aws-region: ${{ env.AWS_REGION }}
         
       - name: Install AWS CLI
         run: | 
@@ -147,6 +147,6 @@ jobs:
           pip install awscli --upgrade
           aws dynamodb put-item \
           --table-name telemetry-prod-temperature-readings-aggregation \
-          --item file://deploy/templates/dynamodb/seed.json \
+          --item file://terraform/templates/dynamodb/seed.json \
           --condition-expression "attribute_not_exists(total_readings_count)" \
           || true

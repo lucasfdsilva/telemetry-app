@@ -6,6 +6,7 @@ This is a REST API application that takes in fake temperature readings from remo
 
 ## Contents
 - [API Reference](https://github.com/lucasfdsilva/telemetry-app#api-reference)
+  - [Public URL](https://github.com/lucasfdsilva/telemetry-app#public-url)   
   - [Endpoints](https://github.com/lucasfdsilva/telemetry-app#endpoints)
 - [Developing](https://github.com/lucasfdsilva/telemetry-app#developing)
   - [Built With](https://github.com/lucasfdsilva/telemetry-app#built-with)

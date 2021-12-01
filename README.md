@@ -4,6 +4,19 @@
 
 This is a REST API application that takes in fake temperature readings from remote sensors and store these readings in a NoSQL database. The application also provides temperature statistics such as Max, Min and Average temperatures, based on the readings received.
 
+## Contents
+- [API Reference](https://github.com/lucasfdsilva/telemetry-app#api-reference)
+  - [Endpoints](https://github.com/lucasfdsilva/telemetry-app#endpoints)
+- [Developing](https://github.com/lucasfdsilva/telemetry-app#developing)
+  - [Built With](https://github.com/lucasfdsilva/telemetry-app#built-with)
+  - [Prerequisites](https://github.com/lucasfdsilva/telemetry-app#prerequisites)
+  - [Setting up Dev environment](https://github.com/lucasfdsilva/telemetry-app#setting-up-dev-environment)
+  - [Running the application locally](https://github.com/lucasfdsilva/telemetry-app#running-the-application-locally)
+- [Deploying the application](https://github.com/lucasfdsilva/telemetry-app#deploying-the-application)
+- [Tearing down the Terraform stack](https://github.com/lucasfdsilva/telemetry-app#tearing-down-the-terraform-stack)
+- [CI/CD Pipeline](https://github.com/lucasfdsilva/telemetry-app#cicd-pipeline)
+- [Architecture](https://github.com/lucasfdsilva/telemetry-app#architecture)
+- [Database](https://github.com/lucasfdsilva/telemetry-app#database)
 
 ## API Reference
 A Swagger documentation page is currently under development for the API but in the meantime the below should provide enough guidance on how to interact with the API.

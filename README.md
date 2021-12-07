@@ -136,10 +136,10 @@ Please refer to the [Architecture Diagram](https://github.com/lucasfdsilva/telem
 
 1. Once the AWS credentials have been configured locally, We will use Docker Compose to run Terraform. 
 ```
-docker-compose -f deploy/docker-compose.yml run --rm terraform init
-docker-compose -f deploy/docker-compose.yml run --rm terraform workspace select dev || terraform workspace create dev
-docker-compose -f deploy/docker-compose.yml run --rm terraform plan
-docker-compose -f deploy/docker-compose.yml run --rm terraform apply
+docker-compose -f terraform/docker-compose.yml run --rm terraform init
+docker-compose -f terraform/docker-compose.yml run --rm terraform workspace select dev || terraform workspace create dev
+docker-compose -f terraform/docker-compose.yml run --rm terraform plan
+docker-compose -f terraform/docker-compose.yml run --rm terraform apply
 ```
 
 2. Run the following command to "seed" the Aggregations DynamoDB Table. <br>
@@ -164,9 +164,9 @@ We will use Docker to build a new docker image and then push this image to the E
 
 1. Before we deploy, make sure your Terraform is valid.
 ```
-docker-compose -f deploy/docker-compose.yml run --rm terraform init
-docker-compose -f deploy/docker-compose.yml run --rm terraform fmt
-docker-compose -f deploy/docker-compose.yml run --rm terraform validate
+docker-compose -f terraform/docker-compose.yml run --rm terraform init
+docker-compose -f terraform/docker-compose.yml run --rm terraform fmt
+docker-compose -f terraform/docker-compose.yml run --rm terraform validate
 ```
 
 2. Now run the following at the project root. Make sure you replace the variables where applicable to match your ECR Repo.
@@ -177,8 +177,8 @@ docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
 3. We can now apply the Terraform stack so that ECS uses the newest version of the API.
 ```
-docker-compose -f deploy/docker-compose.yml run --rm terraform plan
-docker-compose -f deploy/docker-compose.yml run --rm terraform apply
+docker-compose -f terraform/docker-compose.yml run --rm terraform plan
+docker-compose -f terraform/docker-compose.yml run --rm terraform apply
 ```
 
 4. After the apply job is complete, Terraform will output the URL you can use to access the application.
@@ -190,8 +190,8 @@ Since Terraform manages our entire stack, destroying and re-creating it can be d
 1. Ensure you're in the correct Terraform workspace. <br>
 2. Destroy your Terraform stack
 ```
-docker-compose -f deploy/docker-compose.yml run --rm terraform workspace select dev
-docker-compose -f deploy/docker-compose.yml run --rm terraform destroy
+docker-compose -f terraform/docker-compose.yml run --rm terraform workspace select dev
+docker-compose -f terraform/docker-compose.yml run --rm terraform destroy
 ```
 
 

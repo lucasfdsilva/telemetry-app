@@ -1,5 +1,9 @@
 name: Destroy Staging
 
+env:
+  ECR_REPO: telemetry-app
+  AWS_REGION: eu-west-1
+
 on: 
   workflow_dispatch:
   

@@ -5,9 +5,7 @@ env:
   AWS_REGION: eu-west-1
 
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
 
 jobs:
 
